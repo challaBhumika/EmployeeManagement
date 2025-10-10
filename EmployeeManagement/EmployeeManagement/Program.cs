@@ -1,11 +1,22 @@
+using EmployeeManagement.Data;
+using EmployeeManagement.Repository;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<EmployeeDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("EmployeeDb")));
+
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 
 var app = builder.Build();
 
